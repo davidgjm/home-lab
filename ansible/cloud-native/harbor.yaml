@@ -1,0 +1,27 @@
+---
+- name: Harbor installation prerequisites
+  hosts: "{{ target_hosts | default('cloudnativeservers') }}"
+  become: yes
+  vars:
+    harbor:
+      version: 'v2.12.3'
+      offlineInstall: yes
+      offline_installer_prefix: harbor-offline-installer-
+      installer_location: $HOME
+  tasks:
+    - name: Install required packages
+      become: yes
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+        - docker.io
+        - docker-compose-v2
+    - name: Download offline installer
+      ansible.builtin.get_url:
+        url: https://github.com/goharbor/harbor/releases/download/{{ harbor.version }}/{{ harbor.offline_installer_prefix }}{{ harbor.version }}.tgz
+        dest: "{{ harbor.installer_location }}"
+      register: offline_download
+      when: harbor.offlineInstall | bool
+    - name: Extract installation files
+      ansible.builtin.command:
+        cmd: tar xzvf {{offline_download.dest}}

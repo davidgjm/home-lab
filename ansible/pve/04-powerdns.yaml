@@ -1,0 +1,77 @@
+---
+- name: Install PowerDNS Authoritative Server 4.9.x
+  hosts: "{{ target_hosts | default('pveservers') }}"
+  become: yes
+  tasks:
+  - name: Add repo key
+    ansible.builtin.get_url:
+      url: https://repo.powerdns.com/FD380FBB-pub.asc
+      dest: //etc/apt/keyrings/auth-49-pub.asc
+  - name: Add repository
+    ansible.builtin.apt_repository:
+      repo: deb [signed-by=/etc/apt/keyrings/auth-49-pub.asc] http://repo.powerdns.com/debian {{ ansible_distribution_release }}-auth-49 main
+      filename: pdns
+      state: present
+  - name: set preferences
+    ansible.builtin.copy:
+      dest: /etc/apt/preferences.d/auth-49
+      content: |
+        Package: auth*
+        Pin: origin repo.powerdns.com
+        Pin-Priority: 600
+  - name: apt install
+    ansible.builtin.apt:
+      update_cache: yes
+      pkg:
+        - pdns-server
+        - pdns-backend-sqlite3
+        - sqlite3
+- name: Basic setup
+  hosts: "{{ target_hosts | default('pveservers') }}"
+  become: yes
+  tasks:
+  - name: Configure backend
+    ansible.builtin.replace:
+      path: /etc/powerdns/pdns.conf
+      regexp: '^(launch=).*$'
+      replace: ''
+
+################################
+### NOTE: 
+### Update API Key in pdns.conf
+  - name: enable rest api
+    ansible.builtin.blockinfile:
+      path: /etc/powerdns/pdns.conf
+      marker: "## <-- {mark} ANSIBLE MANAGED BLOCK -->"
+      block: |
+        launch=gsqlite3
+        gsqlite3-database=/var/lib/powerdns/pdns.sqlite3
+
+        ## Enable API
+        api=yes
+        api-key=YOUR_API_KEY
+
+        ## Enable webserver
+        webserver=yes
+        webserver-address=0.0.0.0
+        webserver-allow-from=0.0.0.0/0
+        webserver-port=8081
+
+  - name: create directory /var/lib/powerdns
+    ansible.builtin.file:
+      path: /var/lib/powerdns
+      state: directory
+      recurse: yes
+      owner: pdns
+      group: pdns
+
+  # - name: Create database
+  #   ansible.builtin.command: 
+  #     cmd: "sqlite3 /var/lib/powerdns/pdns.sqlite3 < /usr/share/doc/pdns-backend-sqlite3/schema.sqlite3.sql"
+  #     creates: /var/lib/powerdns/pdns.sqlite3
+  - name: start pdns service
+    ansible.builtin.systemd_service:
+      name: pdns
+      enabled: true
+      daemon_reload: true
+      state: restarted

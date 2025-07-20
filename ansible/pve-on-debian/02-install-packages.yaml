@@ -1,0 +1,48 @@
+---
+- name: Install packages for proxmox
+  hosts: vmhosts
+  become: yes
+  tasks:
+    - name: Enable root ssh login
+      ansible.builtin.blockinfile:
+        path: /etc/ssh/sshd_config
+        create: yes
+        marker: "## {mark} ANSIBLE MANAGED BLOCK"
+        block: |
+          PermitRootLogin yes
+    # - name: Restart sshd
+    #   ansible.builtin.systemd_service:
+    #     state: started
+    #     name: ssh
+    - name: Install required packages
+      become: yes
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+        - proxmox-ve
+        - postfix
+        - open-iscsi
+        - chrony
+    - name: remove debian kernel
+      ansible.builtin.apt:
+        pkg:
+          - linux-image-amd64
+          - 'linux-image-6.1*'
+        state: absent
+    - name: update grub
+      ansible.builtin.command: update-grub
+    - name: Remove the os-prober Package
+      ansible.builtin.apt:
+        name: os-prober
+        state: absent
+
+## ansible-galaxy collection install community.crypto
+- name: Setup ssh key pair and trust relationship
+  hosts: vmhosts
+  become: yes
+  tasks:
+  - name: Generate key pairs
+    community.crypto.openssh_keypair:
+      path: /root/.ssh/id_rsa
+      size: 2048
+    become: yes

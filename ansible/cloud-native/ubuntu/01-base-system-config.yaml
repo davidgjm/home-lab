@@ -1,0 +1,76 @@
+---
+- name: Ubuntu system initial configuration
+  hosts: "{{ target_hosts | default('ubuntuCloudVM') }}"
+  become: yes
+  tasks:
+    - name: Install required packages
+      become: yes
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+        - curl
+        - chrony
+        - git
+        - gpg
+        - iperf3
+        - jq
+        - net-tools
+        - tcpdump
+        - tree
+        - vim
+        - wget
+    - name: Set default editor to vim
+      ansible.builtin.command: update-alternatives --set editor /usr/bin/vim.tiny
+
+## Network Configuration
+- name: Network Configuration
+  hosts: "{{ target_hosts | default('ubuntuCloudVM') }}"
+  become: yes
+  tasks:
+  # - name: 修改 /etc/network/interfaces 禁用 IPv6
+  #   ansible.builtin.replace:
+  #     path: /etc/network/interfaces
+  #     regexp: '^iface (.*) inet6'
+  - name: 通过 sysctl 禁用 IPv6
+    ansible.posix.sysctl:
+      name: "{{ item.key }}"
+      value: "{{ item.value }}"
+      state: present
+      reload: yes
+    loop:
+      - { key: net.ipv6.conf.all.disable_ipv6, value: 1 }
+      - { key: net.ipv6.conf.default.disable_ipv6, value: 1 }
+
+
+- name: Other system wide initialization
+  hosts: "{{ target_hosts | default('ubuntuCloudVM') }}"
+  become: yes
+  tasks:
+  - name: normalize hostname
+    ansible.builtin.hostname:
+      name: "{{ inventory_hostname }}"
+      use: debian
+  - name: Add aliases for .bashrc
+    ansible.builtin.blockinfile:
+      path: "/home/{{ ansible_user }}/.bashrc"
+      create: yes
+      marker: "## {mark} ANSIBLE MANAGED BLOCK"
+      block: |
+        alias ll='ls -l'
+        alias la='ls -A'
+        alias l='ls -CF'
+        export PATH=/usr/sbin:/sbin:$PATH
+    become: false
+  - name: Add aliases for .bashrc root
+    ansible.builtin.blockinfile:
+      path: /root/.bashrc
+      create: yes
+      marker: "## {mark} ANSIBLE MANAGED BLOCK"
+      block: |
+        alias ll='ls -l'
+        alias la='ls -A'
+        alias l='ls -CF'
+    become: yes
+  - name: reboot to finalize
+    ansible.builtin.reboot: 
+      reboot_command: systemctl reboot

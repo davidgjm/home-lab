@@ -1,0 +1,30 @@
+---
+- name: Prepare to use zabbly apt repository
+  hosts: vmhosts
+  become: yes
+  tasks:
+  - name: Get architecture for apt
+    ansible.builtin.command: dpkg --print-architecture
+    register: arch
+  - name: Add zabbly repo using key from URL
+    deb822_repository:
+      name: zabbly-incus-stable
+      types: deb
+      uris: https://pkgs.zabbly.com/incus/stable
+      suites: '{{ ansible_distribution_release }}'
+      components: main
+      architectures: "{{ arch.stdout }}"
+      signed_by: https://pkgs.zabbly.com/key.asc
+- name: Install incus packages
+  hosts: vmhosts
+  become: yes
+  tasks:
+  - name: apt install incus
+    ansible.builtin.apt:
+      # default_release: zabbly
+      update_cache: yes
+      pkg:
+      - incus
+      - incus-base
+      - incus-ui-canonical
+    become: yes

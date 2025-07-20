@@ -1,0 +1,45 @@
+#cloud-config
+
+timezone: Asia/Shanghai
+
+manage_etc_hosts: true
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD21Ec09Bks1+FIU7wErIh+CCNP5sSCRXr5/R1//kTabLgcagoHpkP1q7taiB1KlcPYpHjor2rwEG4HLMXbg7WULhvROaFN5wF8UjLp7oTvxQLyyaOG5oO6AI6pODu2KuKlHEh1gCICGlpsbm8qu0vt7+rROeveNllQytn7IGiYKckOC15RYJn8brZwXB5f3zANfyRthbiYO4hnqozX7KdbAxSnT+3asqOxloFD9xyi4G15pLSi49fWRCedxvwR2dzXuQEpx14klFzS2bBL2xr1R1WUP6+66J2j1I51GuMcTYUBXhg36sV6EeCJUhzdv10h40gccnyPRJQ36wMO3fpB david
+  - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHvoL80TOvwx6f6O1Df6rGmj20XyjOsQX+qYpzBgSoWwa6E3tT7jl9VVb7AHDnza3cAY0l5Tz+3XSXb56w/RcGc= PVE VM
+
+## APT repository
+apt:
+  disable_suites:
+    - proposed
+  primary:
+    - arches: [default]
+      uri: https://mirrors.aliyun.com/debian/
+  security:
+    - arches: [default]
+      uri: https://mirrors.aliyun.com/debian-security/
+
+## package managment
+package_reboot_if_required: true
+package_update: true
+package_upgrade: false
+packages:
+  - chrony
+  - git
+  - qemu-guest-agent
+  - vim
+  - tree
+
+power_state:
+  delay: 3
+  mode: reboot
+  message: Rebooting machine
+  timeout: 10
+  condition: true
+
+
+final_message: |
+  cloud-init has finished
+  version: $version
+  timestamp: $timestamp
+  datasource: $datasource
+  uptime: $uptime

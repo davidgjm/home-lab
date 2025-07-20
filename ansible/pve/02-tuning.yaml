@@ -1,0 +1,26 @@
+- name: Tune NTP for PVE
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: yes
+  tasks:
+  - name: Add NTP server - aliyun
+    ansible.builtin.copy:
+      dest: /etc/chrony/sources.d/10-aliyun.sources
+      content: |
+        server ntp.aliyun.com iburst
+
+      mode: 0644
+  - name: Add NTP server - ntsc
+    ansible.builtin.copy:
+      dest: /etc/chrony/sources.d/20-ntsc.sources
+      content: |
+        server ntp.ntsc.ac.cn iburst
+        
+      mode: 0644
+  - name: Reload ntp sources
+    ansible.builtin.command: chronyc reload sources
+  - name: relect best source
+    ansible.builtin.command: chronyc reselect
+  - name: check ntp sources
+    ansible.builtin.command: chronyc -a sources
+  - name: check ntp sources
+    ansible.builtin.command: chronyc tracking

@@ -1,0 +1,106 @@
+- name: 重置 Debian 12 APT 源到默认状态
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: yes
+  vars:
+    # 镜像站选择 (自动地理定位)
+    mirror_protocol: "http"
+    primary_mirror: "deb.debian.org"
+    security_mirror: "security.debian.org"
+
+    # 组件配置 (适配 Debian 12 特性)
+    repo_components: "main contrib non-free non-free-firmware"
+
+  tasks:
+    - name: Set to default debian reposities
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list
+        backup: yes
+        content: |
+          # BEGIN ANSIBLE MANAGED DEFAULT REPOS
+          # Primary repo
+          deb http://deb.debian.org/debian {{ ansible_distribution_release }} {{ repo_components }}
+          deb-src http://deb.debian.org/debian {{ ansible_distribution_release }} {{ repo_components }}
+
+          # Security updates
+          deb http://security.debian.org/debian-security {{ ansible_distribution_release }}-security {{ repo_components }}
+          deb-src http://security.debian.org/debian-security {{ ansible_distribution_release }}-security {{ repo_components }}
+
+          # updates
+          deb http://deb.debian.org/debian {{ ansible_distribution_release }}-updates {{ repo_components }}
+          deb-src http://deb.debian.org/debian {{ ansible_distribution_release }}-updates {{ repo_components }}
+
+          # backports
+          deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main contrib non-free
+          # END ANSIBLE MANAGED DEFAULT REPOS        
+
+    # ========== 验证阶段 ==========
+    - name: 检查源配置有效性
+      ansible.builtin.command:
+        cmd: apt-get update -o APT::Get::List-Cleanup=no
+      register: apt_update
+      changed_when: false
+      ignore_errors: yes
+
+    - name: 显示验证结果
+      ansible.builtin.debug:
+        msg: 
+          - "APT源状态: {{ '正常' if apt_update.rc == 0 else '异常' }}"
+          - "错误信息: {{ apt_update.stderr }}"
+      when: apt_update is defined
+
+    - name: Install required packages
+      become: yes
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+        - bridge-utils
+        - curl
+        - chrony
+        - git
+        - gpg
+        - iperf3
+        - jq
+        - net-tools
+        - tcpdump
+        - whois
+        - thin-provisioning-tools
+        - vim
+        - wget
+        - netplan.io
+        - podman
+    - name: Set default editor to vim
+      ansible.builtin.command: update-alternatives --set editor /usr/bin/vim.tiny
+# ================= 网络服务配置 =================
+- name: Initialize Network configuration
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: yes
+  tasks:
+  - name: 修改 /etc/network/interfaces 禁用 IPv6
+    ansible.builtin.replace:
+      path: /etc/network/interfaces
+      regexp: '^iface (.*) inet6'
+  - name: network interface configuration
+    ansible.builtin.copy:
+      dest: /etc/netplan/10-dhcp.yaml
+      content: |
+        network:
+          version: 2
+          ethernets:
+            all-en:
+              match:
+                name: "en*"
+              dhcp4: true
+      mode: '0600'
+      force: false
+    become: yes
+  - name: netplan apply
+    ansible.builtin.command: netplan apply --debug
+
+- name: Other system wide initialization
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: yes
+  tasks:
+  - name: normalize hostname
+    ansible.builtin.hostname:
+      name: "{{ inventory_hostname }}"
+      use: debian

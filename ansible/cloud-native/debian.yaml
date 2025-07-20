@@ -1,0 +1,102 @@
+- name: Install required packages
+  hosts: "{{ target_hosts | default('debianNodes') }}"
+  become: yes
+  tasks:
+    - name: Install required packages
+      become: yes
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+        - bridge-utils
+        - bind9-dnsutils
+        - curl
+        - chrony
+        - git
+        - gpg
+        - iperf3
+        - jq
+        - net-tools
+        - netcat-openbsd
+        - tcpdump
+        - tree
+        - vim
+        - wget
+    - name: Set default editor to vim
+      ansible.builtin.command: update-alternatives --set editor /usr/bin/vim.tiny
+# ================= 网络服务配置 =================
+- name: Initialize Network configuration
+  hosts: "{{ target_hosts | default('debianNodes') }}"
+  become: yes
+  tasks:
+  - name: 通过 sysctl 禁用 IPv6
+    ansible.posix.sysctl:
+      name: "{{ item.key }}"
+      value: "{{ item.value }}"
+      state: present
+      reload: yes
+    loop:
+      - { key: net.ipv6.conf.all.disable_ipv6, value: 1 }
+      - { key: net.ipv6.conf.default.disable_ipv6, value: 1 }
+  - name: Create a directory if it does not exist
+    ansible.builtin.file:
+      path: /etc/systemd/resolved.conf.d
+      state: directory
+      mode: '0755'
+  - name: set DNS search domain as 'home.lab'
+    ansible.builtin.copy:
+      dest: /etc/systemd/resolved.conf.d/home-lab.conf
+      content: |
+        [Resolve]
+        Domains=home.lab
+  - name: Restart systemd-resolvd
+    ansible.builtin.systemd_service:
+      state: restarted
+      name: systemd-resolved
+
+- name: Turn on root login conditionally
+  hosts: "{{ target_hosts | default('debianNodes') }}"
+  become: yes
+  tasks:
+  - name: Trun on root login
+    ansible.builtin.replace:
+      path: /etc/ssh/sshd_config
+      regexp: '^#*PermitRootLogin.*'
+      replace: 'PermitRootLogin yes'
+    when: rootLogin | bool
+  - name: Restart sshd
+    ansible.builtin.systemd_service:
+      state: restarted
+      name: sshd
+    when: rootLogin | bool
+
+
+- name: Other system wide initialization
+  hosts: "{{ target_hosts | default('debianNodes') }}"
+  become: yes
+  tasks:
+  - name: normalize hostname
+    ansible.builtin.hostname:
+      name: "{{ inventory_hostname }}"
+      use: debian
+  - name: Add aliases for .bashrc
+    ansible.builtin.blockinfile:
+      path: "/home/{{ ansible_user }}/.bashrc"
+      create: yes
+      marker: "## {mark} ANSIBLE MANAGED BLOCK"
+      block: |
+        alias ll='ls -l'
+        alias la='ls -A'
+        alias l='ls -CF'
+        export PATH=/usr/sbin:/sbin:$PATH
+    become: false
+  - name: Add aliases for .bashrc root
+    ansible.builtin.blockinfile:
+      path: /root/.bashrc
+      create: yes
+      marker: "## {mark} ANSIBLE MANAGED BLOCK"
+      block: |
+        alias ll='ls -l'
+        alias la='ls -A'
+        alias l='ls -CF'
+    become: yes
+

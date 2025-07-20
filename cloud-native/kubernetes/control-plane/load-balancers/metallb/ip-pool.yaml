@@ -1,0 +1,9 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ip-pool-basic
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.16.100.80-172.16.100.99
+  avoidBuggyIPs: true

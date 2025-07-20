@@ -1,0 +1,50 @@
+- name: Network configuration for kubeadm
+  hosts: "{{ target_hosts | default('debianNodes') }}"
+  become: yes
+  tasks:
+  - name: 通过 sysctl 禁用 IPv6
+    ansible.posix.sysctl:
+      name: "{{ item.key }}"
+      value: "{{ item.value }}"
+      state: present
+      reload: yes
+    loop:
+      # - { key: net.bridge.bridge-nf-call-iptables, value: 1 }
+      # - { key: net.bridge.bridge-nf-call-ip6tables, value: 1 }
+      - { key: net.ipv4.ip_forward, value: 1 }
+
+- name: Install kubeadm
+  hosts: "{{ target_hosts | default('debianNodes') }}"
+  become: yes
+  tasks:
+  - name: Install required packages
+    ansible.builtin.apt:
+      update_cache: yes
+      pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gpg
+  - name: add kubeadm repository
+    ansible.builtin.apt_key:
+      url: "https://pkgs.k8s.io/core:/stable:/{{ k8sVersion }}/deb/Release.key"
+      keyring: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  - name: Add repository
+    ansible.builtin.apt_repository:
+      repo: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ k8sVersion }}/deb/ /
+      filename: kubernetes
+      state: present
+  - name: install kubeadm and kubelete
+    ansible.builtin.apt:
+      update_cache: yes
+      pkg:
+      - kubeadm
+      - kubelet
+      - kubectl
+  - name: pin versions
+    ansible.builtin.command: apt-mark hold kubeadm kubelet kubectl
+  - name: Enable the kubelet service
+    ansible.builtin.systemd_service:
+      state: started
+      name: kubelet
+      enabled: true

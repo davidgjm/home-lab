@@ -1,0 +1,25 @@
+---
+- name: Install packages for proxmox
+  hosts: vmhosts
+  become: yes
+  tasks:
+  - name: Add repo key
+    ansible.builtin.apt_key:
+      url: https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg
+      state: present
+  - name: Add pve repository
+    ansible.builtin.apt_repository:
+      repo: deb http://download.proxmox.com/debian/pve {{ ansible_distribution_release }} pve-no-subscription
+      state: present
+      filename: pve
+  - name: apt update & upgrade
+    ansible.builtin.apt:
+      update_cache: yes
+      upgrade: full
+  - name: install pve kernel
+    ansible.builtin.apt:
+      name: proxmox-default-kernel
+      state: present
+  - name: reboot
+    ansible.builtin.reboot: 
+      reboot_command: systemctl reboot

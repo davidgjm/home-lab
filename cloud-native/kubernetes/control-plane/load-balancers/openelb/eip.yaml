@@ -1,0 +1,10 @@
+apiVersion: network.kubesphere.io/v1alpha2
+kind: Eip
+metadata:
+    name: layer2-eip
+    annotations:
+      eip.openelb.kubesphere.io/is-default-eip: "true"
+spec:
+    address: 172.16.100.60-172.16.100.79
+    interface: eth0
+    protocol: layer2

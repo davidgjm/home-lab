@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: dnsutils
+  name: dnsutils
+  namespace: cluster-validation
+spec:
+  selector:
+    matchLabels:
+      app: dnsutils
+  template:
+    metadata:
+      labels:
+        app: dnsutils
+    spec:
+      containers:
+      - image: registry.k8s.io/e2e-test-images/agnhost:2.39
+        name: agnhost

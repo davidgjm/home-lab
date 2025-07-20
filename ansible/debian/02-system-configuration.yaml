@@ -1,0 +1,88 @@
+---
+- name: Debian system initial configuration
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: yes
+  tasks:
+  # ================= 基础配置 =================
+
+  - name: Add aliases for .bashrc
+    ansible.builtin.blockinfile:
+      path: "/home/{{ ansible_user }}/.bashrc"
+      create: yes
+      marker: "## {mark} ANSIBLE MANAGED BLOCK"
+      block: |
+        alias ll='ls -l'
+        alias la='ls -A'
+        alias l='ls -CF'
+        export PATH=/usr/sbin:/sbin:$PATH
+    become: false
+  - name: Add aliases for .bashrc root
+    ansible.builtin.blockinfile:
+      path: /root/.bashrc
+      create: yes
+      marker: "## {mark} ANSIBLE MANAGED BLOCK"
+      block: |
+        alias ll='ls -l'
+        alias la='ls -A'
+        alias l='ls -CF'
+    become: yes
+  - name: 通过 sysctl 禁用 IPv6
+    ansible.posix.sysctl:
+      name: "{{ item.key }}"
+      value: "{{ item.value }}"
+      state: present
+      reload: yes
+    loop:
+      - { key: net.ipv6.conf.all.disable_ipv6, value: 1 }
+      - { key: net.ipv6.conf.default.disable_ipv6, value: 1 }
+
+# file: configure_sudo_standard.yml
+- name: 配置标准版免密sudo权限
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: yes
+  vars:
+    # 核心可配置参数
+    sudo_user: "{{ ansible_user }}"                # 目标用户名
+    full_access: true                # 是否开启完全权限（生产环境建议false）
+    allowed_commands:                 # 当full_access=false时生效的命令白名单
+      - "/usr/bin/apt update"
+      # - "/usr/bin/systemctl restart *"
+      # - "/sbin/reboot"
+
+  tasks:
+    # 任务1：创建sudo策略文件
+    - name: 部署sudo配置
+      ansible.builtin.copy:
+        dest: "/etc/sudoers.d/90-{{ sudo_user }}-nopasswd"
+        content: |
+          # Ansible托管配置 - 严禁手动修改
+          {% if full_access %}
+          {{ sudo_user }} ALL=(ALL:ALL) NOPASSWD: ALL
+          {% else %}
+          {{ sudo_user }} ALL=(ALL) NOPASSWD: {{ allowed_commands | join(', ') }}
+          {% endif %}
+        owner: root
+        group: root
+        mode: 0440
+        validate: /usr/sbin/visudo -cf %s
+      tags:
+        - sudo
+    - name: 自动化验证流程
+      block:
+        - name: 测试特权命令执行
+          ansible.builtin.command: "sudo -u root {{ item }}"
+          loop: "{{ allowed_commands }}"
+          changed_when: false
+          register: sudo_test
+          ignore_errors: yes
+
+        - name: 生成验证报告
+          ansible.builtin.debug:
+            msg: |
+              SUDO配置验证结果:
+              {% for result in sudo_test.results %}
+              - 命令: {{ result.item }}
+                状态: {{ '成功' if not result.failed else '失败' }}
+                错误: {{ result.msg if result.failed else '无' }}
+              {% endfor %}
+      when: validate_sudo | default(true)

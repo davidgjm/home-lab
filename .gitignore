@@ -1,0 +1,13 @@
+.DS_Stoe
+
+./vscode/
+
+./node_modules/
+
+*.pem
+*.key
+*.crt
+*.csr
+
+
+*.log

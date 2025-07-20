@@ -1,0 +1,132 @@
+- name: PVE system initialization
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: yes
+  vars:
+    # 镜像站选择 (自动地理定位)
+    mirror_protocol: "http"
+    primary_mirror: "deb.debian.org"
+    security_mirror: "security.debian.org"
+
+    # 组件配置 (适配 Debian 12 特性)
+    repo_components: "main contrib non-free non-free-firmware"
+
+  tasks:
+  - name: disable IPv6
+    ansible.posix.sysctl:
+      name: "{{ item.key }}"
+      value: "{{ item.value }}"
+      state: present
+      reload: yes
+    loop:
+      - { key: net.ipv6.conf.all.disable_ipv6, value: 1 }
+      - { key: net.ipv6.conf.default.disable_ipv6, value: 1 }
+  - name: remove enterprise repo
+    ansible.builtin.file:
+      state: absent
+      path: /etc/apt/sources.list.d/pve-enterprise.list
+  - name: remove ceph enterprise repo
+    ansible.builtin.file:
+      state: absent
+      path: /etc/apt/sources.list.d/ceph.list
+  - name: Install required packages
+    become: yes
+    ansible.builtin.apt:
+      update_cache: yes
+      pkg:
+      - bridge-utils
+      - curl
+      - git
+      - gpg
+      - iperf3
+      - net-tools
+      - sudo
+      - tcpdump
+      - whois
+      - thin-provisioning-tools
+      - vim
+      - wget
+  - name: Set default editor to vim
+    ansible.builtin.command: update-alternatives --set editor /usr/bin/vim.basic
+
+- name: Create non-root user
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: no
+  tasks:
+  - name: Create local user
+    ansible.builtin.user:
+      name: "{{ ansible_user}}"
+      # password: "{{ ansible_user}}"
+      shell: /bin/bash
+      create_home: yes
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
+  - name: Add aliases for .bashrc
+    ansible.builtin.blockinfile:
+      path: /home/{{ ansible_user }}/.bashrc
+      create: yes
+      marker: "## {mark} ANSIBLE MANAGED BLOCK"
+      block: |
+        alias ll='ls -l'
+        alias la='ls -A'
+        alias l='ls -CF'
+        export PATH=/usr/sbin:/sbin:$PATH
+  - name: Add aliases for .bashrc root
+    ansible.builtin.blockinfile:
+      path: /root/.bashrc
+      create: yes
+      marker: "## {mark} ANSIBLE MANAGED BLOCK"
+      block: |
+        alias ll='ls -l'
+        alias la='ls -A'
+        alias l='ls -CF'
+
+- name: 配置标准版免密sudo权限
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: yes
+  vars:
+    # 核心可配置参数
+    sudo_user: "{{ ansible_user }}"                # 目标用户名
+    full_access: true                # 是否开启完全权限（生产环境建议false）
+    allowed_commands:                 # 当full_access=false时生效的命令白名单
+      - "/usr/bin/apt update"
+      # - "/usr/bin/systemctl restart *"
+      # - "/sbin/reboot"
+
+  tasks:
+    # 任务1：创建sudo策略文件
+    - name: 部署sudo配置
+      ansible.builtin.copy:
+        dest: "/etc/sudoers.d/90-{{ sudo_user }}-nopasswd"
+        content: |
+          # Ansible托管配置 - 严禁手动修改
+          {% if full_access %}
+          {{ sudo_user }} ALL=(ALL:ALL) NOPASSWD: ALL
+          {% else %}
+          {{ sudo_user }} ALL=(ALL) NOPASSWD: {{ allowed_commands | join(', ') }}
+          {% endif %}
+        owner: root
+        group: root
+        mode: 0640
+        validate: /usr/sbin/visudo -cf %s
+      tags:
+        - sudo
+    - name: 自动化验证流程
+      block:
+        - name: 测试特权命令执行
+          ansible.builtin.command: "sudo -u root {{ item }}"
+          loop: "{{ allowed_commands }}"
+          changed_when: false
+          register: sudo_test
+          ignore_errors: yes
+
+        - name: 生成验证报告
+          ansible.builtin.debug:
+            msg: |
+              SUDO配置验证结果:
+              {% for result in sudo_test.results %}
+              - 命令: {{ result.item }}
+                状态: {{ '成功' if not result.failed else '失败' }}
+                错误: {{ result.msg if result.failed else '无' }}
+              {% endfor %}
+      when: validate_sudo | default(true)

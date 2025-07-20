@@ -1,0 +1,39 @@
+---
+- name: cephadm instllation
+  hosts: vmhosts
+  become: yes
+  vars:
+    ceph_codename: "reef"
+    ceph_version: "19.2.2"
+    ceph_primary_repo: "https://download.ceph.com"
+    ceph_mirror: "http://mirrors.ustc.edu.cn/ceph"
+    use_mirror: true
+  tasks:
+  - name: add ceph apt mirror repository
+    block:
+      - name: Add repo key
+        ansible.builtin.apt_key:
+          url: "{{ ceph_mirror }}/keys/release.asc"
+          state: present
+      - name: add repo
+        ansible.builtin.apt_repository:
+          repo: deb {{ ceph_mirror }}/debian-{{ ceph_codename }}/ {{ ansible_distribution_release }} main
+          state: present
+          filename: ceph
+    when: use_mirror | bool
+  - name: add ceph apt primary repository
+    block:
+      - name: Add repo key
+        ansible.builtin.apt_key:
+          url: "{{ ceph_mirror }}/keys/release.asc"
+          state: present
+      - name: add repo
+        ansible.builtin.apt_repository:
+          repo: deb {{ ceph_primary_repo }}/debian-{{ ceph_codename }}/ {{ ansible_distribution_release }} main
+          state: present
+          filename: ceph
+    when: not use_mirror | bool
+  - name: Install cephadm
+    ansible.builtin.apt:
+      name: cephadm
+      update_cache: yes

@@ -1,0 +1,47 @@
+
+pveservers:
+  hosts:
+    pdns:
+      ansible_host: pdns.home.lab
+
+
+## Debian Cloud VMs
+platformVM:
+  hosts:
+    harbor:
+      ansible_host: harbor.home.lab
+
+jumpservers:
+  hosts:    
+    jumpserver01:
+      ansible_host: jumpserver01.home.lab
+    jumpserver02:
+      ansible_host: 172.16.100.201
+    jumpserver03:
+      ansible_host: 172.16.100.202
+
+
+k8sNodes:
+  hosts:
+    server:
+      ansible_host: server.home.lab
+    node-0:
+      ansible_host:  node0.home.lab
+    node-1:
+      ansible_host: node1.home.lab
+  vars:
+    rootLogin: false
+
+datacenter:
+  children:
+    debianCloudVM:
+    k8sNodes:
+
+
+
+debianNodes:
+  children:
+    k8sNodes:
+    jumpservers:
+  vars:
+    rootLogin: false

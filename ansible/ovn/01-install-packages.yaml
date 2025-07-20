@@ -1,0 +1,26 @@
+---
+- name: Debian system initial configuration
+  hosts: vmhosts
+  become: yes
+  tasks:
+  - name: 从 Backport 安装指定包
+    ansible.builtin.apt:
+      name: "{{ item }}"
+      default_release: "{{ ansible_distribution_release }}-backports"
+      state: latest
+      install_recommends: no
+    loop:
+      - ovn-central
+      - ovn-host
+  - name: 中央节点服务配置
+    ansible.builtin.systemd:
+      name: "ovn-central"
+      enabled: yes
+      state: stopped
+      daemon_reload: yes
+  - name: 计算节点服务配置
+    ansible.builtin.systemd:
+      name: "ovn-host"
+      enabled: yes
+      state: stopped
+      daemon_reload: yes

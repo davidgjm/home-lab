@@ -1,0 +1,148 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram name="ovn-poc" id="DM1sxt02d7Zojr-Di5rs">
+    <mxGraphModel dx="2641" dy="2137" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-2" value="OVN Architecture" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="-390" y="360" width="710" height="620" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-1" value="&lt;span style=&quot;color: rgb(171, 178, 191); font-family: Consolas, menlo, monospace; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;                                         CMS&#xa;                                          |&#xa;                                          |&#xa;                              +-----------|-----------+&#xa;                              |           |           |&#xa;                              |     OVN/CMS Plugin    |&#xa;                              |           |           |&#xa;                              |           |           |&#xa;                              |   OVN Northbound &lt;/span&gt;&lt;span class=&quot;hljs-built_in&quot; style=&quot;box-sizing: border-box; color: rgb(230, 192, 123); font-family: Consolas, menlo, monospace; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;DB&lt;/span&gt;&lt;span style=&quot;color: rgb(171, 178, 191); font-family: Consolas, menlo, monospace; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;   |&#xa;                              |           |           |&#xa;                              |           |           |&#xa;                              |       ovn-northd      |&#xa;                              |           |           |&#xa;                              +-----------|-----------+&#xa;                                          |&#xa;                                          |&#xa;                                +-------------------+&#xa;                                | OVN Southbound &lt;/span&gt;&lt;span class=&quot;hljs-built_in&quot; style=&quot;box-sizing: border-box; color: rgb(230, 192, 123); font-family: Consolas, menlo, monospace; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;DB&lt;/span&gt;&lt;span style=&quot;color: rgb(171, 178, 191); font-family: Consolas, menlo, monospace; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt; |&#xa;                                +-------------------+&#xa;                                          |&#xa;                                          |&#xa;                       +------------------+------------------+&#xa;                       |                  |                  |&#xa;         HV &lt;/span&gt;&lt;span class=&quot;hljs-number&quot; style=&quot;box-sizing: border-box; color: rgb(209, 154, 102); font-family: Consolas, menlo, monospace; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;1&lt;/span&gt;&lt;span style=&quot;color: rgb(171, 178, 191); font-family: Consolas, menlo, monospace; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;          |                  |    HV &lt;/span&gt;&lt;span class=&quot;hljs-built_in&quot; style=&quot;box-sizing: border-box; color: rgb(230, 192, 123); font-family: Consolas, menlo, monospace; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;n&lt;/span&gt;&lt;span style=&quot;color: rgb(171, 178, 191); font-family: Consolas, menlo, monospace; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 300; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-wrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;&quot;&gt;          |&#xa;       +---------------|---------------+  .  +---------------|---------------+&#xa;       |               |               |  .  |               |               |&#xa;       |        ovn-controller         |  .  |        ovn-controller         |&#xa;       |         |          |          |  .  |         |          |          |&#xa;       |         |          |          |     |         |          |          |&#xa;       |  ovs-vswitchd   ovsdb-server  |     |  ovs-vswitchd   ovsdb-server  |&#xa;       |                               |     |                               |&#xa;       +-------------------------------+     +-------------------------------+&lt;/span&gt;" style="text;whiteSpace=wrap;html=1;labelBackgroundColor=#000000;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-2">
+          <mxGeometry y="20" width="720" height="590" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-3" value="Central" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="150" width="500" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-20" value="" style="swimlane;startSize=0;collapsible=0;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-3">
+          <mxGeometry x="10" y="30" width="450" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-7" value="&lt;span style=&quot;color: rgb(14, 165, 233); font-family: &amp;quot;Operator Mono&amp;quot;, Consolas, Monaco, Menlo, monospace; font-size: 14px; text-align: left; background-color: rgba(15, 164, 233, 0.08);&quot;&gt;OVN/CMS plugin&lt;/span&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-20">
+          <mxGeometry x="10" y="20" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-8" value="&lt;span style=&quot;font-family: Consolas, Monaco, &amp;quot;Andale Mono&amp;quot;, &amp;quot;Ubuntu Mono&amp;quot;, monospace; letter-spacing: 0.2px; text-align: left; white-space: pre;&quot;&gt;&lt;font color=&quot;#3399ff&quot;&gt;&lt;b&gt;ovnnb-db(ovsdb-server)&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-20">
+          <mxGeometry x="160" y="20" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-11" value="&lt;span style=&quot;color: rgb(14, 165, 233); font-family: &amp;quot;Operator Mono&amp;quot;, Consolas, Monaco, Menlo, monospace; font-size: 14px; text-align: left; background-color: rgba(15, 164, 233, 0.08);&quot;&gt;ovn-northd&lt;/span&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-20">
+          <mxGeometry x="10" y="80" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-41" value="&lt;span style=&quot;font-family: Consolas, Monaco, &amp;quot;Andale Mono&amp;quot;, &amp;quot;Ubuntu Mono&amp;quot;, monospace; letter-spacing: 0.2px; text-align: left; white-space: pre;&quot;&gt;&lt;font color=&quot;#3399ff&quot;&gt;&lt;b&gt;ovnsb-db&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;&lt;b style=&quot;color: rgb(51, 153, 255); font-family: Consolas, Monaco, &amp;quot;Andale Mono&amp;quot;, &amp;quot;Ubuntu Mono&amp;quot;, monospace; letter-spacing: 0.2px; text-align: left; white-space: pre;&quot;&gt;(ovsdb-server)&lt;/b&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-20">
+          <mxGeometry x="160" y="80" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-56" value="6642" style="fontStyle=0;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;spacingLeft=2;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-20">
+          <mxGeometry x="370" y="92" width="16" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-22" value="OpenvSwitch (OVS)" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-3">
+          <mxGeometry x="90" y="260" width="360" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-13" value="hypervisor" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="610" width="670" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-19" value="" style="swimlane;startSize=0;collapsible=0;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-13">
+          <mxGeometry x="20" y="40" width="590" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-14" value="&lt;span style=&quot;color: rgb(14, 165, 233); font-family: &amp;quot;Operator Mono&amp;quot;, Consolas, Monaco, Menlo, monospace; font-size: 14px; text-align: left; background-color: rgba(15, 164, 233, 0.08);&quot;&gt;ovn-controller&lt;/span&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-19">
+          <mxGeometry x="10" y="10" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-15" value="&lt;span style=&quot;color: rgb(14, 165, 233); font-family: &amp;quot;Operator Mono&amp;quot;, Consolas, Monaco, Menlo, monospace; font-size: 14px; text-align: left; background-color: rgba(15, 164, 233, 0.08);&quot;&gt;ovs-vswitchd&lt;/span&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-19">
+          <mxGeometry x="170" y="10" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-17" value="&lt;span style=&quot;color: rgb(14, 165, 233); font-family: &amp;quot;Operator Mono&amp;quot;, Consolas, Monaco, Menlo, monospace; font-size: 14px; text-align: left; background-color: rgba(15, 164, 233, 0.08);&quot;&gt;ovsdb-server&lt;/span&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-19">
+          <mxGeometry x="340" y="10" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-18" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-19">
+          <mxGeometry x="520" y="20" width="27.2" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-24" value="OpenvSwitch (OVS)" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-13">
+          <mxGeometry x="20" y="150" width="360" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-25" value="&lt;p&gt;&lt;span style=&quot;font-family: Consolas, Monaco, &amp;quot;Andale Mono&amp;quot;, &amp;quot;Ubuntu Mono&amp;quot;, monospace; letter-spacing: 0.2px; text-align: left; white-space-collapse: preserve;&quot;&gt;openvswitch-switch&lt;/span&gt;&lt;/p&gt;" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-24">
+          <mxGeometry x="62.8" y="30" width="27.2" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-26" value="ovs1" style="swimlane;whiteSpace=wrap;html=1;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="1490" y="650" width="720" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-27" value="172.16.100.51" style="text;strokeColor=#001DBC;align=center;fillColor=#0050ef;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#ffffff;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-26">
+          <mxGeometry x="10" y="25" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-42" value="central" style="swimlane;whiteSpace=wrap;html=1;collapsible=0;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-26">
+          <mxGeometry x="250" y="72" width="130" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-43" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-42">
+          <mxGeometry x="2" width="17" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-44" value="ovn-central" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-42">
+          <mxGeometry x="10" y="35" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-46" value="hypervisor" style="swimlane;whiteSpace=wrap;html=1;collapsible=0;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-26">
+          <mxGeometry x="10" y="72" width="220" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-47" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-46">
+          <mxGeometry x="2" width="17" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-48" value="ovn-host" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-46">
+          <mxGeometry x="10" y="35" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-49" value="ovn-common" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-46">
+          <mxGeometry x="110" y="35" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-54" value="&lt;p&gt;&lt;span style=&quot;font-family: Consolas, Monaco, &amp;quot;Andale Mono&amp;quot;, &amp;quot;Ubuntu Mono&amp;quot;, monospace; letter-spacing: 0.2px; text-align: left; white-space-collapse: preserve;&quot;&gt;openvswitch-switch&lt;/span&gt;&lt;/p&gt;" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-26">
+          <mxGeometry x="470" y="60" width="27.2" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-33" value="apt package dependencies" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-600" y="-350" width="520" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-28" value="ovn-host" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-33">
+          <mxGeometry x="300" y="70" width="27.2" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-30" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="xiRZNEPEIOL53lKLFx1K-33" source="xiRZNEPEIOL53lKLFx1K-28" target="xiRZNEPEIOL53lKLFx1K-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-12" value="ovn-common" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-33">
+          <mxGeometry x="410" y="182" width="27.2" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-32" value="ovn-central" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-33">
+          <mxGeometry x="70" y="70" width="27.2" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-37" value="OpenvSwitch (OVS)" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-33">
+          <mxGeometry x="20" y="290" width="380" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-35" value="&lt;p style=&quot;text-align: left;&quot;&gt;&lt;font face=&quot;Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace&quot;&gt;&lt;span style=&quot;letter-spacing: 0.2px; white-space-collapse: preserve;&quot;&gt;openvswitch-common&lt;/span&gt;&lt;/font&gt;&lt;br&gt;&lt;/p&gt;" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-37">
+          <mxGeometry x="57.20000000000006" y="40" width="27.2" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-23" value="&lt;p&gt;&lt;span style=&quot;font-family: Consolas, Monaco, &amp;quot;Andale Mono&amp;quot;, &amp;quot;Ubuntu Mono&amp;quot;, monospace; letter-spacing: 0.2px; text-align: left; white-space-collapse: preserve;&quot;&gt;openvswitch-switch&lt;/span&gt;&lt;/p&gt;" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-37">
+          <mxGeometry x="287.20000000000005" y="40" width="27.2" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-36" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="xiRZNEPEIOL53lKLFx1K-37" source="xiRZNEPEIOL53lKLFx1K-23" target="xiRZNEPEIOL53lKLFx1K-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-34" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="xiRZNEPEIOL53lKLFx1K-33" source="xiRZNEPEIOL53lKLFx1K-32" target="xiRZNEPEIOL53lKLFx1K-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-29" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="xiRZNEPEIOL53lKLFx1K-33" source="xiRZNEPEIOL53lKLFx1K-28" target="xiRZNEPEIOL53lKLFx1K-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-39" value="ovs2" style="swimlane;whiteSpace=wrap;html=1;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="1140" width="720" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-40" value="172.16.100.52" style="text;strokeColor=#001DBC;align=center;fillColor=#0050ef;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#ffffff;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-39">
+          <mxGeometry x="10" y="25" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-50" value="hypervisor" style="swimlane;whiteSpace=wrap;html=1;collapsible=0;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-39">
+          <mxGeometry x="30" y="90" width="220" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-51" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-50">
+          <mxGeometry x="2" width="17" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-52" value="ovn-host" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-50">
+          <mxGeometry x="10" y="35" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-53" value="ovn-common" style="whiteSpace=wrap;html=1;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-50">
+          <mxGeometry x="110" y="35" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xiRZNEPEIOL53lKLFx1K-55" value="&lt;p&gt;&lt;span style=&quot;font-family: Consolas, Monaco, &amp;quot;Andale Mono&amp;quot;, &amp;quot;Ubuntu Mono&amp;quot;, monospace; letter-spacing: 0.2px; text-align: left; white-space-collapse: preserve;&quot;&gt;openvswitch-switch&lt;/span&gt;&lt;/p&gt;" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.cloud_service_package_file;aspect=fixed;" vertex="1" parent="xiRZNEPEIOL53lKLFx1K-39">
+          <mxGeometry x="320" y="110" width="27.2" height="32" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

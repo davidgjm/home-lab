@@ -1,0 +1,26 @@
+- name: Install SDN packages for full feature support
+  hosts: "{{ target_hosts | default('vmhosts') }}"
+  become: yes
+  tasks:
+  - name: Install dnsmasq
+    block:
+    - name: apt install dnsmasq
+      ansible.builtin.apt:
+        update_cache: yes
+        name: dnsmasq
+    - name: disable default instance
+      ansible.builtin.systemd_service:
+        name: dnsmasq
+        enabled: false
+        state: "stopped"
+  - name: Install frr-pythontools
+    block:
+    - name: apt install frr-pythontools
+      ansible.builtin.apt:
+        update_cache: yes
+        name: frr-pythontools
+    - name: enable service
+      ansible.builtin.systemd_service:
+        name: frr.service
+        enabled: true
+        state: "started"

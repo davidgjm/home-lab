@@ -1,0 +1,77 @@
+---
+- name: Configure ovn central
+  hosts: vmhosts
+  become: yes
+  tasks:
+  - name: Generate configuration for leader(primary host)
+    ansible.builtin.blockinfile:
+      path: /etc/default/ovn-central
+      create: yes
+      marker: "# {mark} ANSIBLE MARKER TAG"
+      block: |
+        OVN_CTL_OPTS=" \
+            --db-nb-addr={{ ansible_default_ipv4.address }} \
+            --db-nb-create-insecure-remote=yes \
+            --db-sb-addr={{ ansible_default_ipv4.address }} \
+            --db-sb-create-insecure-remote=yes \
+            --db-nb-cluster-local-addr={{ ansible_default_ipv4.address }} \
+            --db-sb-cluster-local-addr={{ ansible_default_ipv4.address }} \
+            --ovn-northd-nb-db=tcp:{{ ansible_default_ipv4.address }}:6641,tcp:{{ hostvars['m7'].ansible_default_ipv4.address }}:6641,tcp:{{ hostvars['ser6'].ansible_default_ipv4.address }}:6641 \
+            --ovn-northd-sb-db=tcp:{{ ansible_default_ipv4.address }}:6642,tcp:{{ hostvars['m7'].ansible_default_ipv4.address }}:6642,tcp:{{ hostvars['ser6'].ansible_default_ipv4.address }}:6642"
+    when: inventory_hostname == 'm5'
+
+- name: Configure ovn controllers
+  hosts: ovncontrollers
+  become: yes
+  tasks:
+  - name: Generate configuration for ovn controllers
+    ansible.builtin.blockinfile:
+      path: /etc/default/ovn-central
+      create: yes
+      marker: "# {mark} ANSIBLE MARKER TAG"
+      block: |
+        OVN_CTL_OPTS=" \
+            --db-nb-addr={{ ansible_default_ipv4.address }} \
+            --db-nb-cluster-remote-addr={{ hostvars['m5'].ansible_default_ipv4.address }} \
+            --db-nb-create-insecure-remote=yes \
+            --db-sb-addr={{ ansible_default_ipv4.address }} \
+            --db-sb-cluster-remote-addr={{ hostvars['m5'].ansible_default_ipv4.address }} \
+            --db-sb-create-insecure-remote=yes \
+            --db-nb-cluster-local-addr={{ ansible_default_ipv4.address }} \
+            --db-sb-cluster-local-addr={{ ansible_default_ipv4.address }} \
+            --ovn-northd-nb-db=tcp:{{ hostvars['m5'].ansible_default_ipv4.address }}:6641,tcp:{{ hostvars['m7'].ansible_default_ipv4.address }}:6641,tcp:{{ hostvars['ser6'].ansible_default_ipv4.address }}:6641 \
+            --ovn-northd-sb-db=tcp:{{ hostvars['m5'].ansible_default_ipv4.address }}:6642,tcp:{{ hostvars['m7'].ansible_default_ipv4.address }}:6642,tcp:{{ hostvars['ser6'].ansible_default_ipv4.address }}:6642"
+
+
+- name: Start systemd services
+  hosts: vmhosts
+  become: yes
+  tasks:
+  - name: systemd for ovn-central
+    ansible.builtin.systemd:
+      name: "ovn-central"
+      enabled: yes
+      state: started
+      daemon_reload: yes
+  - name: Start systemd for ovn-host
+    ansible.builtin.systemd:
+      name: "ovn-host"
+      enabled: yes
+      state: started
+      daemon_reload: yes
+
+
+- name: Configure Open vSwitch
+  hosts: vmhosts
+  become: yes
+  tasks:
+  - name: Configure Open vSwitch with ovs-vsctl
+    ansible.builtin.command:
+      argv:
+        - /usr/bin/ovs-vsctl
+        - set
+        - open_vswitch
+        - .
+        - external_ids:ovn-remote=tcp:{{ hostvars['m5'].ansible_default_ipv4.address }}:6642,tcp:{{ hostvars['m7'].ansible_default_ipv4.address }}:6642,tcp:{{ hostvars['ser6'].ansible_default_ipv4.address }}:6642
+        - external_ids:ovn-encap-type=geneve
+        - external_ids:ovn-encap-ip={{ ansible_default_ipv4.address }}

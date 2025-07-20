@@ -1,0 +1,32 @@
+Every 5.0s: kubectl get po -o wide -A                                                                                                                       Davids-MacBook-Pro.local: 21:36:36
+                                                                                                                                                                                 in 0.078s (0)
+NAMESPACE            NAME                                                       READY   STATUS    RESTARTS        AGE    IP               NODE     NOMINATED NODE   READINESS GATES           
+cluster-validation   dnsutils-sg242                                             1/1     Running   0               38s    10.200.1.4       node-1   <none>           <none>                    
+cluster-validation   dnsutils-wx4tw                                             1/1     Running   0               38s    10.200.2.5       node-2   <none>           <none>                    
+cluster-validation   dnsutils-z9qk8                                             1/1     Running   0               38s    10.200.0.4       node-0   <none>           <none>                    
+default              nginx-54c98b4f84-fpj88                                     1/1     Running   0               42m    10.200.0.10      node-0   <none>           <none>                    
+default              nginx-54c98b4f84-l7btv                                     1/1     Running   0               44m    10.200.2.11      node-2   <none>           <none>                    
+default              nginx-54c98b4f84-pk7r9                                     1/1     Running   0               44m    10.200.1.13      node-1   <none>           <none>                    
+default              nginx-54c98b4f84-xrc7b                                     1/1     Running   0               140m   10.200.1.11      node-1   <none>           <none>                    
+default              nginx-54c98b4f84-zwcg2                                     1/1     Running   0               44m    10.200.2.12      node-2   <none>           <none>                    
+kube-flannel         kube-flannel-ds-2dc94                                      1/1     Running   4 (3h21m ago)   22h    172.16.100.222   node-2   <none>           <none>                    
+kube-flannel         kube-flannel-ds-6sskw                                      1/1     Running   3 (3h23m ago)   22h    172.16.100.221   node-1   <none>           <none>                    
+kube-flannel         kube-flannel-ds-n8qb8                                      1/1     Running   5 (3h22m ago)   21h    172.16.100.220   node-0   <none>           <none>                    
+kube-system          coredns-6d6d87dcbd-289hl                                   1/1     Running   0               14m    10.200.2.2       node-2   <none>           <none>                    
+sandbox              myingress-controller-kubernetes-ingress-6dccf7c9bc-m64dj   1/1     Running   0               13m    10.200.2.3       node-2   <none>           <none>                    
+sandbox              myingress-controller-kubernetes-ingress-6dccf7c9bc-r5dhk   1/1     Running   0               20m    10.200.1.2       node-1   <none>           <none>                    
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              
+                                                                                                                                                                                              

@@ -1,0 +1,44 @@
+
+## Debian Cloud VMs
+platformVM:
+  hosts:
+    harbor:
+      ansible_host: harbor.home.lab
+
+jumpservers:
+  hosts:    
+    jumpserver01:
+      ansible_host: jumpserver01.home.lab
+
+
+k8sNodes:
+  hosts:
+    adm-c0:
+      ansible_host: adm-c0.home.lab
+    adm-c1:
+      ansible_host: adm-c1.home.lab
+    adm-c2:
+      ansible_host: adm-c2.home.lab
+    adm-n0:
+      ansible_host:  adm-n0.home.lab
+    adm-n1:
+      ansible_host: adm-n1.home.lab
+    adm-n2:
+      ansible_host: adm-n2.home.lab
+  vars:
+    rootLogin: false
+    k8sVersion: v1.32
+    kubeadm: true
+
+datacenter:
+  children:
+    debianCloudVM:
+    k8sNodes:
+
+
+
+debianNodes:
+  children:
+    k8sNodes:
+  vars:
+    rootLogin: false

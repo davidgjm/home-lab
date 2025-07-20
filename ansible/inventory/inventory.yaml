@@ -1,0 +1,31 @@
+vmhosts:
+  hosts:
+    gem12:
+      ansible_host: gem12.home.lab
+      primary_nic: eno1
+      secondary_nic: enp3s0
+    m5:
+      ansible_host: m5.home.lab
+      primary_nic: enp1s0
+      secondary_nic: enp2s0
+    m7:
+      ansible_host: m7.home.lab
+      primary_nic: enp1s0
+      secondary_nic: eno1
+    ser6:
+      ansible_host: ser6.home.lab
+      primary_nic: enp2s0
+      secondary_nic: enx000fc929fe3f
+ovncontrollers:
+  hosts:
+    m7:
+      ansible_host: m7.home.lab
+    ser6:
+      ansible_host: ser6.home.lab
+
+
+
+datacenter:
+  children:
+    vmhosts:
+    ovncontrollers:
